@@ -26,14 +26,31 @@ var stylus = require('stylus');
 var cleanCss = require('clean-css');
 var through = require('through');
 
-function compile(file, data) {
-  var compiled = stylus(data, { filename: file }).render();
-  var minified = (new cleanCss).minify(compiled);
+function compile(file, data, opts) {
+  opts = opts || opts;
+  if (typeof opts.minify === "undefined") opts.minify = true;
 
-  return 'module.exports = ' + JSON.stringify(minified) + ';';
+  var compiler = stylus(data, {
+    filename: file,
+    linenos: opts.linenos,
+    compress: opts.compress,
+    firebug: opts.firebug
+  });
+
+  // Allow full control of the compiler object. Can be used to activate nib for
+  // example
+  if (typeof opts.configure === "function") {
+    opts.configure(compiler);
+  }
+
+  var css = compiler.render();
+
+  if (opts.minify) css = (new cleanCss).minify(css);
+
+  return 'module.exports = ' + JSON.stringify(css) + ';';
 }
 
-module.exports = function (file) {
+module.exports = function (file, opts) {
   var data = '';
 
   function write (buf) {
@@ -41,7 +58,7 @@ module.exports = function (file) {
   }
 
   function end () {
-    this.queue(compile(file, data));
+    this.queue(compile(file, data, opts));
     this.queue(null);
   }
 
