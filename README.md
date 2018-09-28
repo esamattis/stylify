@@ -3,7 +3,7 @@
 browserify v2 plugin for [stylus](https://github.com/LearnBoost/stylus).
 
 
-[![NPM](https://nodei.co/npm/stylify.png)](https://nodei.co/npm/stylify/)
+[![NPM](https://nodei.co/npm/stylify.png)](https://nodei.co/npm/stylify/) [![Greenkeeper badge](https://badges.greenkeeper.io/epeli/stylify.svg)](https://greenkeeper.io/)
 
 
 ## Example Usage
